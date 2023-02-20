@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io/ioutil"
 	"net/http"
 
 	"github.com/olahol/go-imageupload"
@@ -42,17 +43,19 @@ func main() {
 			http.NotFound(w, r)
 			return
 		}
+		file, _, _ := r.FormFile("file")
+		out, _ := ioutil.ReadAll(file)
+		w.Write(out)
+		// img, err := imageupload.Process(r, "file")
 
-		img, err := imageupload.Process(r, "file")
+		// if err != nil {
+		// 	panic(err)
+		// }
 
-		if err != nil {
-			panic(err)
-		}
+		// currentImage = img
 
-		currentImage = img
-
-		http.Redirect(w, r, "/", http.StatusMovedPermanently)
+		// http.Redirect(w, r, "/", http.StatusMovedPermanently)
 	})
 
-	http.ListenAndServe(":5000", nil)
+	http.ListenAndServe(":5001", nil)
 }
